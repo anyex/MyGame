@@ -16,6 +16,42 @@
     <Filter Include="窗口类">
       <UniqueIdentifier>{3dd74546-d508-4b1b-a089-4fa5cf424673}</UniqueIdentifier>
     </Filter>
+    <Filter Include="三维向量">
+      <UniqueIdentifier>{3556ec85-331f-49d5-b46f-65140277f984}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="相机类">
+      <UniqueIdentifier>{4db93200-aa82-4d05-8894-c12e87011b73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="加载资源">
+      <UniqueIdentifier>{e162cd2b-aea9-49e0-8962-c4a885537a48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="场景链表">
+      <UniqueIdentifier>{a8f63a65-1784-4995-a8d2-5160e049dbc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="场景对象">
+      <UniqueIdentifier>{6db322fe-29f9-48eb-892b-2c163fb07f06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="引擎">
+      <UniqueIdentifier>{827857b0-37d0-4ad5-a5fa-e30c9d3528ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="地形">
+      <UniqueIdentifier>{fa191242-9d81-44e9-b485-0a37842017ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="纹理">
+      <UniqueIdentifier>{e545b028-a7c7-4b92-9c80-439c1a44dd37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="精灵">
+      <UniqueIdentifier>{d609186f-ca35-4768-b450-675e362f869d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="网络模块">
+      <UniqueIdentifier>{4e4d705d-ac8a-417c-815f-448761a59196}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{df6965c8-619f-4a87-b94f-93796c9b5b7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="字体">
+      <UniqueIdentifier>{0ebf834e-71d3-4cb5-8822-06337fe0603a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -24,10 +60,58 @@
     <ClCompile Include="GameWnd.cpp">
       <Filter>窗口类</Filter>
     </ClCompile>
+    <ClCompile Include="Vector3.cpp">
+      <Filter>三维向量</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>相机类</Filter>
+    </ClCompile>
+    <ClCompile Include="GNode.cpp">
+      <Filter>场景链表</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>纹理</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>地形</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>精灵</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWnd.h">
       <Filter>窗口类</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>三维向量</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>相机类</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadRes.h">
+      <Filter>加载资源</Filter>
+    </ClInclude>
+    <ClInclude Include="GNode.h">
+      <Filter>场景链表</Filter>
+    </ClInclude>
+    <ClInclude Include="GObject.h">
+      <Filter>场景对象</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>引擎</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>纹理</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>地形</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>精灵</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
 #include "GameWnd.h"
-
+#include "LoadRes.h"
 
 bool GameWnd::CreateWnd(HINSTANCE hInstance,int h,int w)
 {
@@ -53,11 +53,9 @@ LRESULT CALLBACK GameWnd::MyWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 		SetupPixelFormat(hDC);
 		hRC = wglCreateContext(hDC);
 		wglMakeCurrent(hDC, hRC);
-
+		init();
 		glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
 		glClearDepth(1.0f);
-
-		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_SMOOTH);
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		
@@ -90,110 +88,80 @@ LRESULT CALLBACK GameWnd::MyWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 		glMatrixMode(GL_PROJECTION);//设定投影矩阵
 		glLoadIdentity();//复位投影矩阵
 						 //计算窗口尺寸比例
-
-		gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 1.0f, 1000.0f);
+		gluPerspective(54.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
 		glMatrixMode(GL_MODELVIEW);//设定模型视图矩阵
 		glLoadIdentity();//复位模型矩阵视图
-
 		break;
+
+	case WM_MOUSEMOVE:
+
+		mouseX = LOWORD(lParam);
+		mouseY = LOWORD(lParam);
+		if (firstMove)
+		{
+			oldMouseX = mouseX;
+			oldMouseY = mouseY;
+			firstMove = false;
+		}
+		
+		camera->pitch += (mouseY - oldMouseY)/1000.0;
+		camera->yaw += (mouseX - oldMouseX)/1000.0;
+
+		if (camera->pitch>30.0f)
+		{
+			camera->pitch = 30.0f;
+		}
+		if (camera->pitch<-30.0f)
+		{
+			camera->pitch = -30.0f;
+		}
+		oldMouseX = mouseX;
+		oldMouseY = mouseY;
+	
+		break;
+	case WM_KEYDOWN:
+		switch (wParam)
+		{
+		case 'A':
+			camera->moveLeft = true;
+			break;
+		case 'S':
+			camera->moveBack = true;
+		    break;
+		case 'D':
+			camera->moveRight = true;
+			break;
+		case 'W':
+			camera->moveForward = true;
+		    break;
+	
+		}
+	
 	}
+	
 
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
 void GameWnd::Render()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
 	glLoadIdentity();
-	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_2D);//开启纹理
 	glEnable(GL_DEPTH_TEST);
-
-
-	
-	
-	gluLookAt(0, 1.5, 5,
-		0 , 1.5 , 1 ,
-		0, 1, 0);
-
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//camera->SwitchTo3D();
+	camera->Update(0.5);
 	glPushMatrix();
+	
 
-	glTranslatef(0, 0, -5);
-	glRotatef(30, 0, 1, 0);
-	//	glColor3f(0.0, 1.0, 0.0); 
-	//正面
-
-	glBegin(GL_QUADS);
-	glTexCoord2f(0, 0);glVertex3i(0, 0, 0);
-	glTexCoord2f(0, 1);glVertex3i(0, 1, 0);
-	glTexCoord2f(1, 1);glVertex3i(1, 1, 0);
-	glTexCoord2f(1, 0);glVertex3i(1, 0, 0);
-	glEnd();
-	//后面
-
-	glBegin(GL_QUADS);
-	glTexCoord2f(0, 0);glVertex3i(0, 0, -1);
-	glTexCoord2f(0, 1);glVertex3i(0, 1, -1);
-	glTexCoord2f(1, 1);glVertex3i(1, 1, -1);
-	glTexCoord2f(1, 0);glVertex3i(1, 0, -1);
-	glEnd();
-
-	//上面
-
-	glBegin(GL_QUADS);
-	glTexCoord2f(0, 0);glVertex3i(0, 1, 0);
-	glTexCoord2f(0, 1);glVertex3i(1, 1, 0);
-	glTexCoord2f(1, 1);glVertex3i(1, 1, -1);
-	glTexCoord2f(1, 0);glVertex3i(0, 1, -1);
-	glEnd();
-	//下面
-
-	glBegin(GL_QUADS);
-	glTexCoord2f(0, 0);glVertex3i(0, 0, 0);
-	glTexCoord2f(0, 1);glVertex3i(1, 0, 0);
-	glTexCoord2f(1, 1);glVertex3i(1, 0, -1);
-	glTexCoord2f(1, 0);glVertex3i(0, 0, -1);
-	glEnd();
-	//左面
-
-	glBegin(GL_QUADS);
-	glTexCoord2f(0, 0);glVertex3i(0, 0, 0);
-	glTexCoord2f(0, 1);glVertex3i(0, 1, 0);
-	glTexCoord2f(1, 1);glVertex3i(0, 1, -1);
-	glTexCoord2f(1, 0);glVertex3i(0, 0, -1);
-	glEnd();
-
-	//右面
-
-	glBegin(GL_QUADS);
-	glTexCoord2f(0, 0);glVertex3i(1, 0, 0);
-	glTexCoord2f(0, 1);glVertex3i(1, 1, 0);
-	glTexCoord2f(1, 1);glVertex3i(1, 1, -1);
-	glTexCoord2f(1, 0);glVertex3i(1, 0, -1);
-	glEnd();
-	glPopMatrix();
-
+	//glColor3f(0.0, 1.0, 0.0); 
+	terrain->Draw();
+	//camera->SwitchTo2D();
+	//glRasterPos2f(0, 0);
+	//back->Draw();
 	glFlush();
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_LIGHTING);
 
-	glPushAttrib(GL_CURRENT_BIT);
-	glPushMatrix();
-
-	glTranslatef(0.0, 0.0, 0.0);
-	glColor3f(0.0f, 0.0f, 1.0f);
-	for (float i = -50;i <= 50;i += 1)
-	{
-		glBegin(GL_LINES);
-		glVertex3f(-50, 0, i);
-		glVertex3f(50, 0, i);
-
-		glVertex3f(i, 0, -50);
-		glVertex3f(i, 0, 50);
-		glEnd();
-
-	}
-	glPopAttrib();
-	glPopMatrix();
 }
 void GameWnd::SetupPixelFormat(HDC hdc)
 {
@@ -223,7 +191,7 @@ void GameWnd::SetupPixelFormat(HDC hdc)
 	nPixelFormat = ChoosePixelFormat(hdc, &pfd);
 	//设置设备的象素格式
 	SetPixelFormat(hdc, nPixelFormat, &pfd);
-
+	
 
 }
 
@@ -250,4 +218,86 @@ void GameWnd::Run() {
 			SwapBuffers(hDC);
 		}
 	}
+}
+
+void GameWnd::init()
+{
+	BoxTexture = new Texture("image.bmp");	 
+ 	Ground = new Texture("ground4.png");
+	background = new Texture("back.jpg");
+
+	camera = new Camera();
+	camera->pos = Vector3(MAP_W*MAP_SCALE/2, 2, -MAP_W*MAP_SCALE / 2);
+	camera->view = Vector3(0, -1, -100);
+	camera->h = 600;
+	camera->w = 800;
+
+	firstMove = true;
+
+	terrain = new Terrain();
+
+	terrain->texID = Ground->textureID;
+	terrain->InitTerrain(1);
+
+	back = new Sprite(background);
+
+	back->SetRect(-400, -300, 800, 600);
+
+}
+
+void GameWnd::DrawBox()
+{
+	//正面
+	//glBindTexture(GL_TEXTURE_2D, BoxTexture->textureID);
+	glBegin(GL_QUADS);
+
+	glTexCoord2f(0.0, 0.0);glVertex3f(0, 0, 0);
+	glTexCoord2f(0.0, 1.0);glVertex3f(0, 1, 0);
+	glTexCoord2f(1.0, 1.0);glVertex3f(1, 1, 0);
+	glTexCoord2f(1.0, 0.0);glVertex3f(1, 0, 0);
+	glEnd();
+	//后面
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0);glVertex3f(0, 0, -1);
+	glTexCoord2f(0, 1);glVertex3f(0, 1, -1);
+	glTexCoord2f(1, 1);glVertex3f(1, 1, -1);
+	glTexCoord2f(1, 0);glVertex3f(1, 0, -1);
+	glEnd();
+
+	//上面
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0);glVertex3f(0, 1, 0);
+	glTexCoord2f(0, 1);glVertex3f(1, 1, 0);
+	glTexCoord2f(1, 1);glVertex3f(1, 1, -1);
+	glTexCoord2f(1, 0);glVertex3f(0, 1, -1);
+	glEnd();
+	//下面
+
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0);glVertex3f(0, 0, 0);
+	glTexCoord2f(0, 1);glVertex3f(1, 0, 0);
+	glTexCoord2f(1, 1);glVertex3f(1, 0, -1);
+	glTexCoord2f(1, 0);glVertex3f(0, 0, -1);
+	glEnd();
+	//左面
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0);glVertex3f(0, 0, 0);
+	glTexCoord2f(0, 1);glVertex3f(0, 1, 0);
+	glTexCoord2f(1, 1);glVertex3f(0, 1, -1);
+	glTexCoord2f(1, 0);glVertex3f(0, 0, -1);
+	glEnd();
+
+	//右面
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0);glVertex3f(1, 0, 0);
+	glTexCoord2f(0, 1);glVertex3f(1, 1, 0);
+	glTexCoord2f(1, 1);glVertex3f(1, 1, -1);
+	glTexCoord2f(1, 0);glVertex3f(1, 0, -1);
+	glEnd();
+	glPopMatrix();
 }
